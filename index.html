@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MXDown — Segmented Download Manager for Windows</title>
+<meta name="description" content="MXDown is a free, JDownloader2-style multi-connection download manager for Windows, with YouTube support, pause/resume, and more.">
+<link rel="icon" type="image/png" href="favicon.png">
+<style>
+:root{
+  --bg:#0e1116; --panel:#151a21; --panel2:#1b222b; --line:#242d38;
+  --text:#d7dee6; --muted:#8b96a3; --amber:#f0a63c; --teal:#3ec9a7;
+  --blue:#5aa2e0;
+  --mono:"Cascadia Code","JetBrains Mono",Consolas,ui-monospace,monospace;
+  --sans:"Segoe UI",system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);line-height:1.5}
+.wrap{max-width:980px;margin:0 auto;padding:0 24px}
+header{display:flex;align-items:center;gap:12px;padding:24px 0}
+header img{width:36px;height:36px;border-radius:9px}
+header .word{font-family:var(--mono);font-weight:700;font-size:19px;letter-spacing:.3px}
+header .word b{color:var(--amber)}
+nav{margin-left:auto;display:flex;gap:22px}
+nav a{color:var(--muted);text-decoration:none;font-size:14px}
+nav a:hover{color:var(--text)}
+
+.hero{text-align:center;padding:64px 0 56px}
+.hero img{width:120px;height:120px;border-radius:26px;box-shadow:0 20px 60px -20px rgba(58,140,255,.45)}
+.hero h1{font-size:clamp(28px,5vw,44px);margin:28px 0 14px;letter-spacing:-.02em}
+.hero h1 b{color:var(--amber)}
+.hero p{color:var(--muted);font-size:17px;max-width:560px;margin:0 auto 34px}
+.cta{display:inline-flex;align-items:center;gap:10px;background:var(--amber);color:#151a21;
+  font-weight:700;font-size:16px;padding:14px 28px;border-radius:10px;text-decoration:none;
+  box-shadow:0 10px 30px -8px rgba(240,166,60,.5);transition:transform .15s, filter .15s}
+.cta:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.subnote{margin-top:14px;color:var(--muted);font-size:12.5px;font-family:var(--mono)}
+.subnote a{color:var(--blue);text-decoration:none}
+.subnote a:hover{text-decoration:underline}
+
+.badges{display:flex;justify-content:center;gap:10px;margin-top:22px;flex-wrap:wrap}
+.badge{font-family:var(--mono);font-size:11.5px;color:var(--muted);border:1px solid var(--line);
+  border-radius:20px;padding:5px 12px}
+
+.features{padding:50px 0;border-top:1px solid var(--line)}
+.features h2{text-align:center;font-size:12px;text-transform:uppercase;letter-spacing:1.6px;
+  color:var(--muted);margin-bottom:36px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+.card .ic{font-size:22px;margin-bottom:10px}
+.card h3{font-size:15px;margin-bottom:6px}
+.card p{color:var(--muted);font-size:13.5px}
+
+.shot{padding:10px 0 60px}
+.shot .frame{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:8px;
+  box-shadow:0 30px 80px -40px rgba(0,0,0,.6)}
+.shot .frame .bar{display:flex;gap:6px;padding:8px 10px}
+.shot .frame .bar i{width:11px;height:11px;border-radius:50%;background:var(--line)}
+.shot .inner{background:var(--bg);border-radius:8px;padding:26px;text-align:center;color:var(--muted);
+  font-family:var(--mono);font-size:13px;border:1px dashed var(--line)}
+
+footer{border-top:1px solid var(--line);padding:28px 0 40px;text-align:center;color:var(--muted);font-size:13px}
+footer a{color:var(--muted)}
+@media (max-width:640px){ nav{display:none} }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <img src="favicon.png" alt="MXDown logo">
+    <div class="word">MX<b>Down</b></div>
+    <nav>
+      <a href="#features">Features</a>
+      <a href="https://github.com/Mehedi2494/mxdown-releases/releases">Releases</a>
+    </nav>
+  </header>
+</div>
+
+<div class="hero">
+  <img src="logo.png" alt="MXDown">
+  <h1>Segmented downloads,<br><b>the JDownloader way</b> — for Windows</h1>
+  <p>Multi-connection downloads, pause/resume that survives restarts, YouTube support via yt-dlp, and a queue that just works. Free, no ads.</p>
+  <a class="cta" href="https://github.com/Mehedi2494/mxdown-releases/releases/latest" id="downloadBtn">
+    ⬇ Download for Windows
+  </a>
+  <div class="subnote">Windows 10/11 · 64-bit · <a href="https://github.com/Mehedi2494/mxdown-releases/releases/latest">see all releases</a></div>
+  <div class="badges">
+    <span class="badge">Multi-connection</span>
+    <span class="badge">Pause / Resume</span>
+    <span class="badge">YouTube (yt-dlp)</span>
+    <span class="badge">Auto-update</span>
+    <span class="badge">Free</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <section class="features" id="features">
+    <h2>What it does</h2>
+    <div class="grid">
+      <div class="card">
+        <div class="ic">⚡</div>
+        <h3>Multi-connection downloads</h3>
+        <p>Each file splits into up to 16 parallel segments, with live per-segment progress.</p>
+      </div>
+      <div class="card">
+        <div class="ic">⏸</div>
+        <h3>Pause &amp; resume</h3>
+        <p>Progress is saved to disk — quit the app and pick up right where you left off.</p>
+      </div>
+      <div class="card">
+        <div class="ic">🎬</div>
+        <h3>YouTube &amp; 1800+ sites</h3>
+        <p>Paste a video link and it's routed through yt-dlp automatically, with quality picker, playlists, and subtitles.</p>
+      </div>
+      <div class="card">
+        <div class="ic">🧮</div>
+        <h3>Checksum verification</h3>
+        <p>Optional SHA-256/MD5 check after download, catching corruption that a size check alone would miss.</p>
+      </div>
+      <div class="card">
+        <div class="ic">🌐</div>
+        <h3>Proxy &amp; mirrors</h3>
+        <p>HTTP/SOCKS5 proxy support and multi-source mirrors with automatic failover.</p>
+      </div>
+      <div class="card">
+        <div class="ic">🔄</div>
+        <h3>Auto-updating</h3>
+        <p>Install once — future versions land automatically, no need to redownload.</p>
+      </div>
+    </div>
+  </section>
+</div>
+
+<footer>
+  MXDown — free segmented download manager. ·
+  <a href="https://github.com/Mehedi2494/mxdown-releases/releases">All releases on GitHub</a>
+</footer>
+
+</body>
+</html>
