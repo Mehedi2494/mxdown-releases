@@ -60,6 +60,22 @@ nav a:hover{color:var(--text)}
 .shot .inner{background:var(--bg);border-radius:8px;padding:26px;text-align:center;color:var(--muted);
   font-family:var(--mono);font-size:13px;border:1px dashed var(--line)}
 
+.releases{padding:50px 0;border-top:1px solid var(--line)}
+.releases h2{text-align:center;font-size:12px;text-transform:uppercase;letter-spacing:1.6px;
+  color:var(--muted);margin-bottom:36px}
+.rel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 22px;
+  margin-bottom:12px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.rel.latest{border-color:var(--amber)}
+.rel .ver{font-family:var(--mono);font-weight:700;font-size:16px}
+.rel .latestTag{font-family:var(--mono);font-size:10.5px;color:#151a21;background:var(--amber);
+  border-radius:20px;padding:2px 9px;font-weight:700}
+.rel .date{color:var(--muted);font-size:12.5px;font-family:var(--mono)}
+.rel .size{color:var(--muted);font-size:12.5px;font-family:var(--mono)}
+.rel .dl{margin-left:auto;background:var(--panel2);border:1px solid var(--line);color:var(--text);
+  text-decoration:none;font-size:13px;padding:7px 14px;border-radius:7px}
+.rel .dl:hover{border-color:var(--amber);color:var(--amber)}
+.relMsg{text-align:center;color:var(--muted);font-family:var(--mono);font-size:13px;padding:20px 0}
+
 footer{border-top:1px solid var(--line);padding:28px 0 40px;text-align:center;color:var(--muted);font-size:13px}
 footer a{color:var(--muted)}
 @media (max-width:640px){ nav{display:none} }
@@ -73,7 +89,7 @@ footer a{color:var(--muted)}
     <div class="word">MX<b>Down</b></div>
     <nav>
       <a href="#features">Features</a>
-      <a href="https://github.com/Mehedi2494/mxdown-releases/releases">Releases</a>
+      <a href="#releases">Releases</a>
     </nav>
   </header>
 </div>
@@ -85,7 +101,7 @@ footer a{color:var(--muted)}
   <a class="cta" href="https://github.com/Mehedi2494/mxdown-releases/releases/latest/download/MXDown-Setup.exe" id="downloadBtn">
     ⬇ Download for Windows
   </a>
-  <div class="subnote">Windows 10/11 · 64-bit · <a href="https://github.com/Mehedi2494/mxdown-releases/releases/latest">see all releases</a></div>
+  <div class="subnote">Windows 10/11 · 64-bit · <a href="#releases">see all releases</a></div>
   <div class="badges">
     <span class="badge">Multi-connection</span>
     <span class="badge">Pause / Resume</span>
@@ -133,10 +149,69 @@ footer a{color:var(--muted)}
   </section>
 </div>
 
+<div class="wrap">
+  <section class="releases" id="releases">
+    <h2>Releases</h2>
+    <div id="releaseList">
+      <div class="relMsg">Loading releases…</div>
+    </div>
+  </section>
+</div>
+
 <footer>
-  MXDown — free segmented download manager. ·
-  <a href="https://github.com/Mehedi2494/mxdown-releases/releases">All releases on GitHub</a>
+  MXDown — free segmented download manager.
 </footer>
+
+<script>
+(function () {
+  const listEl = document.getElementById("releaseList");
+
+  function fmtDate(iso) {
+    const d = new Date(iso);
+    return d.toLocaleDateString(undefined, { year: "numeric", month: "short", day: "numeric" });
+  }
+  function fmtBytes(n) {
+    if (!n) return "";
+    const u = ["B", "KB", "MB", "GB"];
+    let i = 0;
+    while (n >= 1024 && i < u.length - 1) { n /= 1024; i++; }
+    return n.toFixed(i === 0 ? 0 : 1) + " " + u[i];
+  }
+  function esc(s) {
+    return String(s || "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  }
+
+  fetch("https://api.github.com/repos/Mehedi2494/mxdown-releases/releases")
+    .then((r) => {
+      if (!r.ok) throw new Error("HTTP " + r.status);
+      return r.json();
+    })
+    .then((releases) => {
+      if (!Array.isArray(releases) || releases.length === 0) {
+        listEl.innerHTML = '<div class="relMsg">No releases published yet.</div>';
+        return;
+      }
+      listEl.innerHTML = releases
+        .map((rel, i) => {
+          const exe = (rel.assets || []).find((a) => a.name.toLowerCase().endsWith(".exe"));
+          const dlHref = exe ? exe.browser_download_url : null;
+          const size = exe ? fmtBytes(exe.size) : "";
+          return `<div class="rel${i === 0 ? " latest" : ""}">
+            <span class="ver">${esc(rel.name || rel.tag_name)}</span>
+            ${i === 0 ? '<span class="latestTag">LATEST</span>' : ""}
+            <span class="date">${fmtDate(rel.published_at)}</span>
+            ${size ? `<span class="size">${size}</span>` : ""}
+            ${dlHref ? `<a class="dl" href="${esc(dlHref)}">⬇ Download</a>` : ""}
+          </div>`;
+        })
+        .join("");
+    })
+    .catch(() => {
+      listEl.innerHTML =
+        '<div class="relMsg">Couldn\'t load the release list right now — <a href="https://github.com/Mehedi2494/mxdown-releases/releases" style="color:var(--blue)">view on GitHub</a> instead.</div>';
+    });
+})();
+</script>
 
 </body>
 </html>
